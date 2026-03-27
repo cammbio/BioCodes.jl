@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           using Pkg
-          Pkg.activate(".")
+          Pkg.activate("docs")
           Pkg.instantiate()
         shell: julia --color=yes {0}
       - name: Build and deploy documentation
