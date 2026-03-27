@@ -1,5 +1,14 @@
 # `GCATBase.jl`
 
+[![Build Status](https://github.com/cammbio/GCATBase.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/cammbio/GCATBase.jl/actions/workflows/CI.yml)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cammbio.github.io/GCATBase.jl/stable/)
+[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://cammbio.github.io/GCATBase.jl/dev/)
+
+## Documentation
+
+Full documentation is available at: [Documentation](https://cammbio.github.io/GCATBase.jl/stable/)
+
+
 GCATBase (**G**enetic **C**ode **A**nalysis **T**oolkit) is designed to support the analysis of DNA or RNA sequences based on coding theory and the structure of the genetic code. It serves as a base package and is supplemented by additional packages. Examples for coding theory in molecular biology are below [1,2].
 
 `GCATBase.jl` and the associated GCAT packages are the Julia version - including several extensions - of the GCAT tool written in Java [3].
