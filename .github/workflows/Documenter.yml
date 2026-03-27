@@ -1,0 +1,32 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+    tags: '*'
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1.12'
+      - name: Install dependencies
+        run: |
+          using Pkg
+          Pkg.activate(".")
+          Pkg.instantiate()
+        shell: julia --color=yes {0}
+      - name: Build and deploy documentation
+        run: |
+          using Pkg
+          Pkg.activate(".")
+          Pkg.add("Documenter")
+          include("docs/make.jl")
+        shell: julia --color=yes {0}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
