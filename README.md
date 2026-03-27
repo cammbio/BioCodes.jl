@@ -4,7 +4,7 @@ GCATBase (**G**enetic **C**ode **A**nalysis **T**oolkit) is designed to support 
 
 `GCATBase.jl` and the associated GCAT packages are the Julia version - including several extensions - of the GCAT tool written in Java [3].
 
-This packages uses and compatible to [`BioSequences.jl`](https://github.com/BioJulia/BioSequences.jl).
+This packages uses and is compatible to [`BioSequences.jl`](https://github.com/BioJulia/BioSequences.jl).
 
 ## References
 
