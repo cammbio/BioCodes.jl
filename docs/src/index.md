@@ -9,6 +9,9 @@ Pages = ["index.md"]
 
 # Tutorial
 
+This tutorial shows how to use `BioCodes.jl`. This package is mainly a core package for other packages, so most
+of the functions are of little use.
+
 ## Pre-defined tuples
 
 First, we need to load the required packages:
