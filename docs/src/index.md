@@ -1,6 +1,6 @@
 ```@meta
 # Information for Documenter
-CurrentModule = GCATBase
+CurrentModule = BioCodes
 ```
 
 ```@contents
@@ -14,21 +14,21 @@ Pages = ["index.md"]
 First, we need to load the required packages:
 
 ```@example rt
-using GCATBase, BioSequences
+using BioCodes, BioSequences
 ```
 
 We can access predefined sets of k-mers like codons, dinucleotides, and tetranucleotides:
 
 ```@example rt
-GCATBase.codons
+BioCodes.codons
 ```
 
 ```@example rt
-GCATBase.dinucs
+BioCodes.dinucs
 ```
 
 ```@example rt
-GCATBase.tetranucs
+BioCodes.tetranucs
 ```
 
 It also possible, to create other sets, e.g. all di-nucleoties over the
@@ -62,7 +62,7 @@ Let's shift some RNA in the other direction:
 circshift(rna"AGCU"; k=-1)
 ```
 
-We can also use [`GCATBase.circshift`](@ref) together with [`Base.split`](@ref) to generate all
+We can also use [`BioCodes.circshift`](@ref) together with [`Base.split`](@ref) to generate all
 cyclic permutations of k-mers in a sequence:
 
 ```@example rt
@@ -72,7 +72,7 @@ join(circshift.(split(seq, l=3)))
 
 ## Genetic code tables
 
-`GCATBase` provides mappings for genetic code tables. [`GCATBase.translateAA2Codons`](@ref) creates a dictionary which maps 
+`BioCodes` provides mappings for genetic code tables. [`BioCodes.translateAA2Codons`](@ref) creates a dictionary which maps 
 an amino acid to a set of associated codons. This might be useful if a frequent lookup for the mapping
 is required.
 
@@ -111,7 +111,7 @@ a2cRNA = translateAA2Codons(ncbi_trans_table[2], RNA)
 println(a2cRNA[AA_V])
 ```
 
-It is also possible to obtain the amino acid which is encoded by a codon. [`GCATBase.translateCodon2AA`](@ref)
+It is also possible to obtain the amino acid which is encoded by a codon. [`BioCodes.translateCodon2AA`](@ref)
 creates a dictionary which maps a codon to its amino acid. This is similar to `BioSequences.translate`
 with the difference that the amino acid is _not_ a sequence but the amino acid itself (of type `AminoAcid`).
 
@@ -124,6 +124,6 @@ println(c2a[dna"ATG"])
 # API
 
 ```@autodocs
-Modules = [GCATBase]
+Modules = [BioCodes]
 Order   = [:type, :function]
 ```

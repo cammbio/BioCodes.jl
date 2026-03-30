@@ -1,4 +1,4 @@
-module GCATBase
+module BioCodes
 
 export alltuples, tuples, circshift, translateAA2Codons, translateCodon2AA, aminoAcidPerCodon
 export stripped_alphabet
@@ -82,7 +82,7 @@ See `BioSequences.ncbi_trans_table` for a list of all known genetic codes.
 The Vertebrate Mitochondrial Code (index 2) is used. This code has four 
 stop codons.
 ```jldoctest
-using GCATBase, BioSequences
+using BioCodes, BioSequences
 a2c = translateAA2Codons(ncbi_trans_table[2], DNA)
 sort([a2c[AA_Term]...]) # Stop signal (set is sorted)
 # output
@@ -124,7 +124,7 @@ See `BioSequences.ncbi_trans_table` for a list of all known genetic codes.
 The Vertebrate Mitochondrial Code (index 2) is used. This code has four 
 stop codons.
 ```jldoctest
-using GCATBase, BioSequences
+using BioCodes, BioSequences
 c2a = translateCodon2AA(ncbi_trans_table[2], DNA)
 c2a[dna"ATG"]
 # output

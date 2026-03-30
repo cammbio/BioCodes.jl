@@ -1,10 +1,10 @@
-using GCATBase
+using BioCodes
 using Test, BioSequences
 
 @testset "Predefined set" begin
-    @test length(GCATBase.dinucs) == 16
-    @test length(GCATBase.codons) == 64
-    @test length(GCATBase.tetranucs) == 256
+    @test length(BioCodes.dinucs) == 16
+    @test length(BioCodes.codons) == 64
+    @test length(BioCodes.tetranucs) == 256
 
     S = alltuples((DNA_A, DNA_T), 2)
     @test length(S) == 4

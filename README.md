@@ -1,11 +1,11 @@
-# `GCATBase.jl`
+# `BioCodes.jl`
 
-[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cammbio.github.io/GCATBase.jl)
-[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cammbio.github.io/GCATBase.jl/stable)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cammbio.github.io/BioCodes.jl)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cammbio.github.io/BioCodes.jl/stable)
 
-GCATBase (**G**enetic **C**ode **A**nalysis **T**oolkit) is designed to support the analysis of DNA or RNA sequences based on coding theory and the structure of the genetic code. It serves as a base package and is supplemented by additional packages. Examples for coding theory in molecular biology are below [1,2].
+BioCodes is designed to support the analysis of DNA or RNA sequences based on coding theory and the structure of the genetic code. It serves as a base package and is supplemented by additional packages. Examples for coding theory in molecular biology are below [1,2].
 
-`GCATBase.jl` and the associated GCAT packages are the Julia version - including several extensions - of the GCAT tool written in Java [3].
+`BioCodes.jl` and the associated packages are the Julia versions - including several extensions - of the GCAT (**G**enetic **C**ode **A**nalysis **T**oolkit) written in Java [3].
 
 This package uses and is compatible to [`BioSequences.jl`](https://github.com/BioJulia/BioSequences.jl).
 
