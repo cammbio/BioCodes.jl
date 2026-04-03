@@ -3,7 +3,9 @@
 [![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://cammbio.github.io/BioCodes.jl/dev)
 [![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cammbio.github.io/BioCodes.jl/stable/)
 
-BioCodes is designed to support the analysis of DNA or RNA sequences based on coding theory and the structure of the genetic code. It serves as a base package and is supplemented by additional packages. Examples for coding theory in molecular biology are below [1,2].
+BioCodes is designed to support the analysis of DNA or RNA sequences based on coding theory and the structure of the genetic code. It serves as a base package and is supplemented by additional packages. Examples for coding theory in molecular biology are below [1,2]. The following packages use `BioCodes.jl`:
+
+ * [BioBlockcodes.jl](https://github.com/cammbio/BioBlockcodes.jl)
 
 `BioCodes.jl` and the associated packages are the Julia versions - including several extensions - of the GCAT (**G**enetic **C**ode **A**nalysis **T**oolkit) written in Java [3].
 
