@@ -9,8 +9,9 @@ Pages = ["index.md"]
 
 # Tutorial
 
-This tutorial shows how to use `BioCodes.jl`. This package is mainly a core package for other packages, so most
-of the functions are of little use.
+This tutorial shows how to use `BioCodes.jl`. Since this package is primarily a core package for other packages, most
+of its functions are of little practical use. Many features for the analysis of biological codes 
+are already available in the [`BioSequences.jl`](https://github.com/BioJulia/BioSequences.jl) package. This tutorial also describes them.
 
 ## Pre-defined tuples
 
@@ -20,7 +21,7 @@ First, we need to load the required packages:
 using BioCodes, BioSequences
 ```
 
-We can access predefined sets of k-mers like codons, dinucleotides, and tetranucleotides:
+We can access pre-defined sets of k-mers like codons, dinucleotides, and tetranucleotides:
 
 ```@example rt
 BioCodes.codons
@@ -52,14 +53,17 @@ println(seq)
 codons = split(seq; l=3)
 println(codons)
 ```
+Note that the last codon is incomplete, because the sequence length is not a multiple of 3.
 
 ## Shifting sequences
+
+`circshift` shifts a sequence to the left by one position:
 
 ```@example rt
 circshift(dna"AGCT")
 ```
 
-Let's shift some RNA in the other direction:
+Let's shift some RNA in the other direction by explicitly setting the shift direction and step width:
 
 ```@example rt
 circshift(rna"AGCU"; k=-1)
@@ -71,6 +75,35 @@ cyclic permutations of k-mers in a sequence:
 ```@example rt
 seq = rna"CAGCUUGAG"
 join(circshift.(split(seq, l=3)))
+```
+
+## Complementary and reversed sequences
+
+Complement tuples can be generated with `BioSequences.complement` which is applied element-wise to a sequence of codons:
+
+```@example rt
+seq = rna"CAGCUUGAG"
+complement.(split(seq, l=3))
+```
+
+Reverse tuples are also available via `BioSequences.reverse`:
+
+```@example rt
+seq = rna"CAGCUUGAG"
+reverse.(split(seq, l=3))
+```
+
+If applied together we get complementary reverse codons:
+
+```@example rt
+seq = rna"CAGCUUGAG"
+complement.(reverse.(split(seq, l=3)))
+```
+Or, we the sequence of codons is supposed to be reserved, too:
+
+```@example rt
+seq = rna"CAGCUUGAG"
+reverse(complement.(reverse.(split(seq, l=3))))
 ```
 
 ## Genetic code tables
