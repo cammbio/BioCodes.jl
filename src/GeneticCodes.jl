@@ -1,36 +1,47 @@
-export GeneticCode, StandardGeneticCode, tuple_length, alphabet
+export GeneticCode, StandardGeneticCode, tuple_length, alphabet, inverse
 
 """
     $(TYPEDEF)
 
-A mutable struct representing a genetic code as a mapping from RNA codons to amino acids.
-
-# Notes
-- Throws an error if `aa_order` does not have length 64.
-- The mapping order is determined by the order of codons in [`rna_codon_list`](@ref).
-- The struct is mutable, allowing modification of the codon-to-amino acid mapping after creation.
-
-```julia
-GeneticCode(aa_order::Vector{AminoAcid})
-```
-# See also
-[`rna_codon_list`](@ref)
+A mutable struct representing a genetic code as a mapping from tuples to labels.
 """
 mutable struct GeneticCode{U<:BioSequences.BioSymbol}
-    #"Tuple length"
-    #tuple_length::Int
     "The order of the letter of the alphabet."
     alphabet_order::Vector{U}
     "A vector of labels, representing e.g. the assignment of amino acids to all possible codons."
     label_order::NamedArray #{T,Any,Any} does not work
 end
 
+"""
+    $(TYPEDSIGNATURES)
+
+A genetic code that uses tuples of length `tuple_length` with 
+the alphabet `alphabet`. `label_order` represents the list of labels for each tuple.
+
+The order of `label_order` must be identical to the order of the tuples in 
+[`alltuples`](@ref)(alphabet, tuple_length).
+
+```julia
+gc = GeneticCode(2, [DNA_A, DNA_T], [AA_A, AA_L, AA_K, AA_P])
+```
+"""
 function GeneticCode(tuple_length::Int, alphabet::Vector, label_order::Vector)
     tuples_list = alltuples(alphabet, tuple_length)
     GeneticCode(alphabet, NamedArray(label_order, (tuples_list,), ("aminoacid",)))
 end
 
-"Empty genetic code completely filled with stop-signals (*)."
+
+"""
+    $(TYPEDSIGNATURES)
+
+An empty genetic code filled with identical labels as specified 
+with the parameter `init` (default is Stop-Signal *).
+
+```julia
+gc1 = GeneticCode(2, [DNA_A, DNA_T]]) # only stop signal
+gc2 = GeneticCode(2, [DNA_A, DNA_T]]; init=AA_L) # only Leucine
+```
+"""
 function GeneticCode(tuple_length::Int, alphabet::Vector; init=AA_Term)
     n = length(alphabet)^tuple_length
     labels = fill(init, n)
@@ -41,6 +52,10 @@ Base.:(==)(gc1::GeneticCode, gc2::GeneticCode) = gc1.label_order == gc2.label_or
 
 Base.getindex(gc::GeneticCode, idx) = gc.label_order[idx]
 
+function Base.setindex!(gc::GeneticCode, value, idx)
+    gc.label_order[idx] = value
+end
+
 Base.length(gc::GeneticCode) = length(gc.label_order)
 
 tuple_length(gc::GeneticCode) = length(names(gc.label_order)[1][1])
@@ -50,7 +65,7 @@ BioSymbols.alphabet(gc::GeneticCode) = gc.alphabet_order
 
 import Base.replace!
 
-function replace!(gc::GeneticCode, p::Pair{LongSequence,Any})
+function Base.replace!(gc::GeneticCode, p::Pair{T,U}) where {T<:LongSequence,U<:Any}
     tuple, label = p
     gc.label_order[tuple] = label
 end
@@ -58,13 +73,15 @@ end
 """
     $(TYPEDSIGNATURES)
 
-Genetic code according the the NCBI list. 
+Genetic code based on 64 codons according the the NCBI list. 
 See `BioSequences.ncbi_trans_table` for a list of all known genetic codes.
+The order of the bases is TCAG (or UCAG) (and not alphabetically).
 """
 function GeneticCode(code::BioSequences.GeneticCode)
+    ucag = [DNA_T, DNA_C, DNA_A, DNA_G]
     GeneticCode(
         3,
-        [stripped_alphabet(DNA)...],
+        ucag, # [stripped_alphabet(DNA)...],
         map(
             codon -> BioSequences.translate(
                 codon;
@@ -72,16 +89,27 @@ function GeneticCode(code::BioSequences.GeneticCode)
                 allow_ambiguous_codons=true,
                 alternative_start=false,
             )[1],
-            BioCodes.codons
+            alltuples(ucag, 3) # BioCodes.codons
         )
     )
 end
 
 StandardGeneticCode() = GeneticCode(BioSequences.ncbi_trans_table[1])
 
+struct GeneticCodeCell
+    tuple
+    label
+end
+
+function Base.:(==)(gcc1::GeneticCodeCell, gcc2::GeneticCodeCell)
+    gcc1.tuple == gcc2.tuple && gcc1.label == gcc2.label
+end
+
+Base.show(io::IO, gcc::GeneticCodeCell) = print(io, "$(gcc.tuple): $(gcc.label) ")
+
 function Base.Matrix(gc::GeneticCode; order::Union{Vector{Int},Nothing}=nothing)
     l = tuple_length(gc) # tuple length
-    if (l > 3)
+    if (l < 2 || l > 3)
         throw("Unsupported tuple length: $l")
     end
 
@@ -108,45 +136,78 @@ function Base.Matrix(gc::GeneticCode; order::Union{Vector{Int},Nothing}=nothing)
 
     function output(i, j)
         t = build_tuple(i, j, l)
-        return "$t: $(gc[t])"
+        return GeneticCodeCell(t, gc[t]) # "$t: $(gc[t])"
     end
 
     [output(i, j) for i in 1:nrows, j in 1:ncols]
 end
 
-Base.display(gc::GeneticCode) = display(Matrix(gc))
+# Base.display(gc::GeneticCode) = display(Matrix(gc))
+# Base.display(d::AbstractDisplay, gc::GeneticCode) = display(d, Matrix(gc))
 
-# ----------------------------------------------
-"""
-    cmp_custom(a, b, alphabet)
-
-Compare two strings `a` and `b` using a custom alphabet order.
-
-- `alphabet` is a `Vector{Char}` giving the ordering of characters.
-- Returns `-1` if `a < b`, `0` if `a == b`, `1` if `a > b` (w.r.t. the custom order).
-"""
-function cmp_custom(a::AbstractString, b::AbstractString, alphabet::Vector{Char})
-    # map each character to its rank
-    rank = Dict(c => i for (i, c) in pairs(alphabet))
-    default_rank = typemax(Int)  # for chars not in `alphabet`
-
-    # compare character by character
-    for (ca, cb) in zip(a, b)
-        ra = get(rank, ca, default_rank)
-        rb = get(rank, cb, default_rank)
-        if ra < rb
-            return -1
-        elseif ra > rb
-            return 1
+function Base.show(io::IO, gc::GeneticCode)
+    M = Matrix(gc)
+    n, m = size(M)
+    a = join(alphabet(gc), ",")
+    t = tuple_length(gc)
+    if n < 70 && m < 10
+        a = join(gc.alphabet_order, ",")
+        println(io, "GeneticCode over alphabet {$a} with tuple length $t")
+        for r in eachrow(M)
+            print(io, " ")
+            for o in r
+                print(io, "$o  ")
+            end
+            println(io)
         end
-    end
-
-    # all common prefix equal, shorter string is "smaller"
-    if length(a) < length(b)
-        return -1
-    elseif length(a) > length(b)
-        return 1
     else
-        return 0
+        println(io, "GeneticCode over alphabet {$a} with tuple length $t(...)")
     end
 end
+
+# Base.show(io::IO, gc::Matrix{GeneticCodeCell}) = print(io, gc)
+
+
+"""
+    $(TYPEDSIGNATURES)
+
+Dictionary which maps a label to a set of corresponding tuples
+for a given genetic code `gc`. 
+
+# Examples
+The Vertebrate Mitochondrial Code (index 2) is used. This code has four
+stop codons.
+```jldoctest
+using BioCodes, BioSequences
+gc = GeneticCode(ncbi_trans_table[2])
+a2c = inverse(gc)
+sort([a2c[AA_Term]...]) # Stop signal (set is sorted)
+# output
+4-element Vector{LongSequence{DNAAlphabet{4}}}:
+ AGA
+ AGG
+ TAA
+ TAG
+```   
+"""
+function inverse(gc::GeneticCode)
+    U = typeof(gc.label_order[1])
+    tuples = names(gc.label_order)[1]
+    T = typeof(tuples[1])
+
+    tuple_table = Dict{U,Set{T}}()
+
+    # Iterate over all possible tuples:
+    for i in eachindex(gc.label_order)
+        t = tuples[i]
+        label = gc.label_order[i]
+        # Add the codon to the corresponding amino acid's list in the dictionary:
+        if !haskey(tuple_table, label)
+            tuple_table[label] = Set{T}()
+        end
+        push!(tuple_table[label], t)
+    end
+
+    return tuple_table
+end
+

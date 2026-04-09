@@ -9,7 +9,9 @@ Pages = ["index.md"]
 
 # Tutorial
 
-## Pre-defined tuples
+## Working with tuples or codons
+
+### Pre-defined tuples
 
 First, we need to load the required packages:
 
@@ -37,7 +39,7 @@ alphabet {A, T}:
 alltuples((DNA_A, DNA_T), 2)
 ```
 
-## Tuples from sequences
+### Tuples from sequences
 
 A sequence can be split into non-overlapping tuples of a given length using the
 [`Base.split`](@ref) function. Here, we generate a random DNA sequence of
@@ -50,7 +52,7 @@ codons = split(seq; l=3)
 println(codons)
 ```
 
-## Shifting sequences
+### Shifting sequences
 
 ```@example rt
 circshift(dna"AGCT")
@@ -72,16 +74,15 @@ join(circshift.(split(seq, l=3)))
 
 ## Genetic code tables
 
-`BioCodes` provides mappings for genetic code tables. [`BioCodes.translateAA2Codons`](@ref) creates a dictionary which maps 
-an amino acid to a set of associated codons. This might be useful if a frequent lookup for the mapping
-is required.
+`BioCodes` supports the work with genetic codes which can be known codes with 64 codons 
+or artificial codes with an arbitrary number of bases (the alphabet) and tuple sizes.
+
+### Standard genetic code and its derivations
+
+We begin with the standard genetic code:
 
 ```@example rt
-a2c = translateAA2Codons()
-println(a2c)
-
-println(a2c[AA_G])
-println(a2c[AA_Term])
+sgc = StandardGeneticCode()
 ```
 
 We can also specify the genetic code as listed at NCBI <https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>.
@@ -92,33 +93,55 @@ using BioSequences
 
 ncbi_trans_table
 ```
-Now a translation is created for the vertebrate mitochondrial code (index 2) which has
-four stop codons. `translateAA2Codon` expects two parameters: 1) the genetic code table
-and 2) which nucleoties should be used (i.e. `BioSequences.DNA` or `BioSequences.RNA`).
+
+We show the vertebrate mitochondrial code:
+```@example rt
+GeneticCode(BioSequences.ncbi_trans_table[2])
+```
+
+A genetic codes works like an associated array, so it is possible to access the mapping directly:
 
 ```@example rt
-a2c = translateAA2Codons(ncbi_trans_table[2], DNA)
+println(sgc[dna"AAA"])
+println(sgc[dna"ATG"]) # start codon
+println(sgc[dna"GCG"])
+```
+
+Index-based access is also possible. However, this is dependent of the underlying order of the tuples (codons)
+and labels (amino acids) - so be aware.
+
+```@example rt
+println(sgc[1]) # TTT
+println(sgc[64]) # GGG
+```
+
+`BioCodes` provides also inverse mappings for genetic code tables. [`BioCodes.inverse`](@ref) creates a dictionary which maps 
+an amino acid (or label in general) to a set of associated codons (or tuples in general). This might be useful if a frequent lookup for the mapping is required. As an example a translation is created for the vertebrate mitochondrial code (index 2) which has four stop codons.
+
+```@example rt
+gc = GeneticCode(ncbi_trans_table[2])
+a2c = inverse(gc)
 
 println(a2c[AA_V])
 println(a2c[AA_Term]) # 4 stop codons
 ```
 
-We could also create codons based on RNA.
+### Artificial genetic code tables
+
+The standard genetic code as discussed in the previous section is a special case of general genetic codes.
+The alphabet and tuple length and even the mapping can changed.
+
+We start with a code that only uses Adenin and Tymine as the alphabet and has a tuple length of 2:
 
 ```@example rt
-a2cRNA = translateAA2Codons(ncbi_trans_table[2], RNA)
-
-println(a2cRNA[AA_V])
+gc = GeneticCode(2, [DNA_A, DNA_T])
 ```
-
-It is also possible to obtain the amino acid which is encoded by a codon. [`BioCodes.translateCodon2AA`](@ref)
-creates a dictionary which maps a codon to its amino acid. This is similar to `BioSequences.translate`
-with the difference that the amino acid is _not_ a sequence but the amino acid itself (of type `AminoAcid`).
+Next we show how this empty code can be modified. We assign new amino acids:
 
 ```@example rt
-c2a = translateCodon2AA() # Standard genetic code / DNA
-
-println(c2a[dna"ATG"])
+gc[dna"AA"] = AA_F
+gc[dna"TT"] = AA_L
+gc
 ```
 
 # API

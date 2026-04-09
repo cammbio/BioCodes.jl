@@ -12,7 +12,7 @@ Create all possible tuples of length `l` from the given `alphabet`.
 The tuples are returned as a vector of `LongDNA` or `LongRNA` sequences,
 depending on the type of the alphabet (`DNA` or `RNA`).
 """
-function alltuples(alphabet::Vector{T}, l::Int)::Vector{Union{LongDNA,LongRNA}} where {N, T<:BioSymbol}
+function alltuples(alphabet::Vector{T}, l::Int)::Vector where {T<:BioSymbol}
     S = typeof(alphabet[1])
     v = repeat([alphabet], l)
     ts = reshape(collect(Iterators.product(v...)), 1, :)[1, :] #  make vector
