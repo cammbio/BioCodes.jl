@@ -3,26 +3,18 @@ using Test, BioSymbols, BioSequences
 
 @testset "Amino acid to codons" begin
     @testset "Standard DNA" begin
-        gc = translateAA2Codons()
-        @test gc[AA_F] == Set([dna"TTT", dna"TTC"])
-        @test gc[AA_Term] == Set([dna"TAA", dna"TAG", dna"TGA"])
-    end
-
-    @testset "Standard RNA" begin
-        gc = translateAA2Codons(ncbi_trans_table[1], RNA)
-        @test gc[AA_F] == Set([rna"UUU", rna"UUC"])
-        @test gc[AA_Term] == Set([rna"UAA", rna"UAG", rna"UGA"])
+        gc = StandardGeneticCode()
+        aa2cd = inverse(gc)
+        @test aa2cd[AA_F] == Set([dna"TTT", dna"TTC"])
+        @test aa2cd[AA_Term] == Set([dna"TAA", dna"TAG", dna"TGA"])
     end
 end
 
 @testset "codon to amino acid" begin
     @testset "Standard DNA" begin
-        gc = translateCodon2AA()
+        gc = StandardGeneticCode()
         @test gc[dna"ATG"] == AA_M
-    end
-    @testset "Standard RNA" begin
-        gc = translateCodon2AA(ncbi_trans_table[1], RNA)
-        @test gc[rna"AUG"] == AA_M
+        @test gc[dna"TGA"] == AA_Term
     end
 end
 

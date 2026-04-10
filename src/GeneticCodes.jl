@@ -5,11 +5,11 @@ export GeneticCode, StandardGeneticCode, tuple_length, alphabet, inverse
 
 A mutable struct representing a genetic code as a mapping from tuples to labels.
 """
-mutable struct GeneticCode{U<:BioSequences.BioSymbol}
+mutable struct GeneticCode{T,U<:BioSequences.NucleicAcid,V<:NucleicAcidAlphabet}
     "The order of the letter of the alphabet."
     alphabet_order::Vector{U}
     "A vector of labels, representing e.g. the assignment of amino acids to all possible codons."
-    label_order::NamedArray #{T,Any,Any} does not work
+    label_order::NamedArray{T, 1, Vector{T}, Tuple{NamedArrays.OrderedDict{LongSequence{V}, Int64}}}
 end
 
 """
@@ -19,7 +19,7 @@ A genetic code that uses tuples of length `tuple_length` with
 the alphabet `alphabet`. `label_order` represents the list of labels for each tuple.
 
 The order of `label_order` must be identical to the order of the tuples in 
-[`alltuples`](@ref)(alphabet, tuple_length).
+[`alltuples`](@ref)`(alphabet, tuple_length)`.
 
 ```julia
 gc = GeneticCode(2, [DNA_A, DNA_T], [AA_A, AA_L, AA_K, AA_P])
@@ -48,28 +48,6 @@ function GeneticCode(tuple_length::Int, alphabet::Vector; init=AA_Term)
     GeneticCode(tuple_length, alphabet, labels)
 end
 
-Base.:(==)(gc1::GeneticCode, gc2::GeneticCode) = gc1.label_order == gc2.label_order
-
-Base.getindex(gc::GeneticCode, idx) = gc.label_order[idx]
-
-function Base.setindex!(gc::GeneticCode, value, idx)
-    gc.label_order[idx] = value
-end
-
-Base.length(gc::GeneticCode) = length(gc.label_order)
-
-tuple_length(gc::GeneticCode) = length(names(gc.label_order)[1][1])
-
-import BioSymbols.alphabet
-BioSymbols.alphabet(gc::GeneticCode) = gc.alphabet_order
-
-import Base.replace!
-
-function Base.replace!(gc::GeneticCode, p::Pair{T,U}) where {T<:LongSequence,U<:Any}
-    tuple, label = p
-    gc.label_order[tuple] = label
-end
-
 """
     $(TYPEDSIGNATURES)
 
@@ -94,8 +72,82 @@ function GeneticCode(code::BioSequences.GeneticCode)
     )
 end
 
+"""
+    $(TYPEDSIGNATURES)
+
+The Standard Genetic Code. See [`GeneticCode`](@ref) for details.
+"""
 StandardGeneticCode() = GeneticCode(BioSequences.ncbi_trans_table[1])
 
+Base.:(==)(gc1::GeneticCode, gc2::GeneticCode) = gc1.label_order == gc2.label_order
+
+Base.getindex(gc::GeneticCode, idx) = gc.label_order[idx]
+
+function Base.setindex!(gc::GeneticCode, value, idx)
+    gc.label_order[idx] = value
+end
+
+"""
+    $(TYPEDSIGNATURES)
+
+The number of tuples in the code.
+
+```jldoctest
+using BioCodes
+length(StandardGeneticCode())
+# output
+64
+```
+"""
+Base.length(gc::GeneticCode) = length(gc.label_order)
+
+"""
+    $(TYPEDSIGNATURES)
+
+The length of the tuples in the code.
+
+```jldoctest
+using BioCodes
+tuple_length(StandardGeneticCode()) # i.e. codons
+# output
+3
+```
+"""
+tuple_length(gc::GeneticCode) = length(names(gc.label_order)[1][1])
+
+import BioSymbols.alphabet
+"""
+    $(TYPEDSIGNATURES)
+
+The alphabet used in the code.
+
+```jldoctest
+using BioCodes, BioSymbols
+alphabet(StandardGeneticCode())
+# output
+4-element Vector{DNA}:
+ DNA_T
+ DNA_C
+ DNA_A
+ DNA_G
+```
+"""
+BioSymbols.alphabet(gc::GeneticCode) = gc.alphabet_order
+
+import Base.replace!
+
+function Base.replace!(gc::GeneticCode, p::Pair{T,U}) where {T<:LongSequence,U<:Any}
+    tuple, label = p
+    gc.label_order[tuple] = label
+end
+
+"""
+    $(TYPEDEF)
+
+A helper structure that stores a single mapping of a genetic code for printing.
+I.e. the assignment of a codon to an amino acid.
+The data types, however, are not restricted to biological entities.
+"""
 struct GeneticCodeCell
     tuple
     label
@@ -107,6 +159,13 @@ end
 
 Base.show(io::IO, gcc::GeneticCodeCell) = print(io, "$(gcc.tuple): $(gcc.label) ")
 
+"""
+    $(TYPEDSIGNATURES)
+
+Converts a genetic code into a matrix where the cells are of type [`GeneticCodeCell`](@ref).
+
+This is intended for printing purposes. Only tuple lengths 2 and 3 are supported yet.
+"""
 function Base.Matrix(gc::GeneticCode; order::Union{Vector{Int},Nothing}=nothing)
     l = tuple_length(gc) # tuple length
     if (l < 2 || l > 3)
@@ -141,9 +200,6 @@ function Base.Matrix(gc::GeneticCode; order::Union{Vector{Int},Nothing}=nothing)
 
     [output(i, j) for i in 1:nrows, j in 1:ncols]
 end
-
-# Base.display(gc::GeneticCode) = display(Matrix(gc))
-# Base.display(d::AbstractDisplay, gc::GeneticCode) = display(d, Matrix(gc))
 
 function Base.show(io::IO, gc::GeneticCode)
     M = Matrix(gc)
@@ -210,4 +266,3 @@ function inverse(gc::GeneticCode)
 
     return tuple_table
 end
-

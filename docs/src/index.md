@@ -129,9 +129,9 @@ println(a2c[AA_Term]) # 4 stop codons
 ### Artificial genetic code tables
 
 The standard genetic code as discussed in the previous section is a special case of general genetic codes.
-The alphabet and tuple length and even the mapping can changed.
+The alphabet and tuple length and even the mapping can be changed.
 
-We start with a code that only uses Adenin and Tymine as the alphabet and has a tuple length of 2:
+We start with a code that only uses Adenin and Thymine as the alphabet and that has a tuple length of 2:
 
 ```@example rt
 gc = GeneticCode(2, [DNA_A, DNA_T])
