@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Tutorial · BioCodes.jl</title><meta name="title" content="Tutorial · BioCodes.jl"/><meta property="og:title" content="Tutorial · BioCodes.jl"/><meta property="twitter:title" content="Tutorial · BioCodes.jl"/><meta name="description" content="Documentation for BioCodes.jl."/><meta property="og:description" content="Documentation for BioCodes.jl."/><meta property="twitter:description" content="Documentation for BioCodes.jl."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>BioCodes.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Tutorial</a><ul class="internal"><li><a class="tocitem" href="#Working-with-tuples-or-codons"><span>Working with tuples or codons</span></a></li><li><a class="tocitem" href="#Genetic-code-tables"><span>Genetic code tables</span></a></li><li class="toplevel"><a class="tocitem" href="#API"><span>API</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Tutorial</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Tutorial</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/cammbio/BioCodes.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/cammbio/BioCodes.jl/blob/master/docs/src/index.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><ul><li><a href="#Tutorial">Tutorial</a></li><li class="no-marker"><ul><li><a href="#Working-with-tuples-or-codons">Working with tuples or codons</a></li><li><a href="#Genetic-code-tables">Genetic code tables</a></li></ul></li><li><a href="#API">API</a></li></ul><h1 id="Tutorial"><a class="docs-heading-anchor" href="#Tutorial">Tutorial</a><a id="Tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial" title="Permalink"></a></h1><p>This tutorial shows how to use <code>BioCodes.jl</code>. Since this package is primarily a core package for other packages, most of its functions are of little practical use. Many features for the analysis of biological codes  are already available in the <a href="https://github.com/BioJulia/BioSequences.jl"><code>BioSequences.jl</code></a> package. This tutorial also describes them.</p><h2 id="Working-with-tuples-or-codons"><a class="docs-heading-anchor" href="#Working-with-tuples-or-codons">Working with tuples or codons</a><a id="Working-with-tuples-or-codons-1"></a><a class="docs-heading-anchor-permalink" href="#Working-with-tuples-or-codons" title="Permalink"></a></h2><h3 id="Pre-defined-tuples"><a class="docs-heading-anchor" href="#Pre-defined-tuples">Pre-defined tuples</a><a id="Pre-defined-tuples-1"></a><a class="docs-heading-anchor-permalink" href="#Pre-defined-tuples" title="Permalink"></a></h3><p>First, we need to load the required packages:</p><pre><code class="language-julia hljs">using BioCodes, BioSequences</code></pre><p>We can access pre-defined sets of k-mers like codons, dinucleotides, and tetranucleotides:</p><pre><code class="language-julia hljs">BioCodes.codons</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">64-element Vector{BioSequences.LongSequence{BioSequences.DNAAlphabet{4}}}:
+ AAA
+ CAA
+ GAA
+ TAA
+ ACA
+ CCA
+ GCA
+ TCA
+ AGA
+ CGA
+ ⋮
+ TCT
+ AGT
+ CGT
+ GGT
+ TGT
+ ATT
+ CTT
+ GTT
+ TTT</code></pre><pre><code class="language-julia hljs">BioCodes.dinucs</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">16-element Vector{BioSequences.LongSequence{BioSequences.DNAAlphabet{4}}}:
+ AA
+ CA
+ GA
+ TA
+ AC
+ CC
+ GC
+ TC
+ AG
+ CG
+ GG
+ TG
+ AT
+ CT
+ GT
+ TT</code></pre><pre><code class="language-julia hljs">BioCodes.tetranucs</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">256-element Vector{BioSequences.LongSequence{BioSequences.DNAAlphabet{4}}}:
+ AAAA
+ CAAA
+ GAAA
+ TAAA
+ ACAA
+ CCAA
+ GCAA
+ TCAA
+ AGAA
+ CGAA
+ ⋮
+ TCTT
+ AGTT
+ CGTT
+ GGTT
+ TGTT
+ ATTT
+ CTTT
+ GTTT
+ TTTT</code></pre><p>It also possible, to create other sets, e.g. all di-nucleoties over the alphabet {A, T}:</p><pre><code class="language-julia hljs">alltuples((DNA_A, DNA_T), 2)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4-element Vector{BioSequences.LongSequence{BioSequences.DNAAlphabet{4}}}:
+ AA
+ TA
+ AT
+ TT</code></pre><h3 id="Tuples-from-sequences"><a class="docs-heading-anchor" href="#Tuples-from-sequences">Tuples from sequences</a><a id="Tuples-from-sequences-1"></a><a class="docs-heading-anchor-permalink" href="#Tuples-from-sequences" title="Permalink"></a></h3><p>A sequence can be split into non-overlapping tuples of a given length using the <a href="#Base.split-Tuple{T} where T&lt;:BioSequences.BioSequence"><code>Base.split</code></a> function. Here, we generate a random DNA sequence of length 10 and split it into codons (tuples of length 3):</p><pre><code class="language-julia hljs">seq = randseq(DNAAlphabet{4}(), 10)
+println(seq)
+codons = split(seq; l=3)
+println(codons)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GTTTCCTGAA
+BioSequences.LongSequence{BioSequences.DNAAlphabet{4}}[GTT, TCC, TGA]</code></pre><p>Note that the last codon is incomplete, because the sequence length is not a multiple of 3.</p><h3 id="Shifting-sequences"><a class="docs-heading-anchor" href="#Shifting-sequences">Shifting sequences</a><a id="Shifting-sequences-1"></a><a class="docs-heading-anchor-permalink" href="#Shifting-sequences" title="Permalink"></a></h3><p><code>circshift</code> shifts a sequence to the left by one position:</p><pre><code class="language-julia hljs">circshift(dna&quot;AGCT&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4nt DNA Sequence:
+GCTA</code></pre><p>Let&#39;s shift some RNA in the other direction by explicitly setting the shift direction and step width:</p><pre><code class="language-julia hljs">circshift(rna&quot;AGCU&quot;; k=-1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4nt RNA Sequence:
+UAGC</code></pre><p>We can also use <a href="#Base.circshift-Tuple{T} where T&lt;:BioSequences.BioSequence"><code>BioCodes.circshift</code></a> together with <a href="#Base.split-Tuple{T} where T&lt;:BioSequences.BioSequence"><code>Base.split</code></a> to generate all cyclic permutations of k-mers in a sequence:</p><pre><code class="language-julia hljs">seq = rna&quot;CAGCUUGAG&quot;
+join(circshift.(split(seq, l=3)))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;AGCUUCAGG&quot;</code></pre><h3 id="Complementary-and-reversed-sequences"><a class="docs-heading-anchor" href="#Complementary-and-reversed-sequences">Complementary and reversed sequences</a><a id="Complementary-and-reversed-sequences-1"></a><a class="docs-heading-anchor-permalink" href="#Complementary-and-reversed-sequences" title="Permalink"></a></h3><p>Complemented tuples can be generated with <code>BioSequences.complement</code> which is applied element-wise to a sequence of codons:</p><pre><code class="language-julia hljs">seq = rna&quot;CAGCUUGAG&quot;
+complement.(split(seq, l=3))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{BioSequences.LongSequence{BioSequences.RNAAlphabet{4}}}:
+ GUC
+ GAA
+ CUC</code></pre><p>Reversed tuples are also available via <code>BioSequences.reverse</code>:</p><pre><code class="language-julia hljs">seq = rna&quot;CAGCUUGAG&quot;
+reverse.(split(seq, l=3))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{BioSequences.LongSequence{BioSequences.RNAAlphabet{4}}}:
+ GAC
+ UUC
+ GAG</code></pre><p>If applied together, we get complementary reversed codons:</p><pre><code class="language-julia hljs">seq = rna&quot;CAGCUUGAG&quot;
+complement.(reverse.(split(seq, l=3)))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{BioSequences.LongSequence{BioSequences.RNAAlphabet{4}}}:
+ CUG
+ AAG
+ CUC</code></pre><p>Or, if the sequence of codons is supposed to be reserved, too:</p><pre><code class="language-julia hljs">seq = rna&quot;CAGCUUGAG&quot;
+reverse(complement.(reverse.(split(seq, l=3))))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{BioSequences.LongSequence{BioSequences.RNAAlphabet{4}}}:
+ CUC
+ AAG
+ CUG</code></pre><h2 id="Genetic-code-tables"><a class="docs-heading-anchor" href="#Genetic-code-tables">Genetic code tables</a><a id="Genetic-code-tables-1"></a><a class="docs-heading-anchor-permalink" href="#Genetic-code-tables" title="Permalink"></a></h2><p><code>BioCodes</code> supports the work with genetic codes which can be known codes with 64 codons  or artificial codes with an arbitrary number of bases (the alphabet) and tuple sizes.</p><h3 id="Standard-genetic-code-and-its-derivations"><a class="docs-heading-anchor" href="#Standard-genetic-code-and-its-derivations">Standard genetic code and its derivations</a><a id="Standard-genetic-code-and-its-derivations-1"></a><a class="docs-heading-anchor-permalink" href="#Standard-genetic-code-and-its-derivations" title="Permalink"></a></h3><p>We begin with the standard genetic code:</p><pre><code class="language-julia hljs">sgc = StandardGeneticCode()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GeneticCode over alphabet {T,C,A,G} with tuple length 3
+ TTT: F   TCT: S   TAT: Y   TGT: C   
+ TTC: F   TCC: S   TAC: Y   TGC: C   
+ TTA: L   TCA: S   TAA: *   TGA: *   
+ TTG: L   TCG: S   TAG: *   TGG: W   
+ CTT: L   CCT: P   CAT: H   CGT: R   
+ CTC: L   CCC: P   CAC: H   CGC: R   
+ CTA: L   CCA: P   CAA: Q   CGA: R   
+ CTG: L   CCG: P   CAG: Q   CGG: R   
+ ATT: I   ACT: T   AAT: N   AGT: S   
+ ATC: I   ACC: T   AAC: N   AGC: S   
+ ATA: I   ACA: T   AAA: K   AGA: R   
+ ATG: M   ACG: T   AAG: K   AGG: R   
+ GTT: V   GCT: A   GAT: D   GGT: G   
+ GTC: V   GCC: A   GAC: D   GGC: G   
+ GTA: V   GCA: A   GAA: E   GGA: G   
+ GTG: V   GCG: A   GAG: E   GGG: G   
+</code></pre><p>We can also specify the genetic code as listed at NCBI <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a>. <code>BioSequences.ncbi_trans_table</code> provides part of it as a list:</p><pre><code class="language-julia hljs">using BioSequences
+
+ncbi_trans_table</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Translation Tables:
+  1. The Standard Code (standard_genetic_code)
+  2. The Vertebrate Mitochondrial Code (vertebrate_mitochondrial_genetic_code)
+  3. The Yeast Mitochondrial Code (yeast_mitochondrial_genetic_code)
+  4. The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code (mold_mitochondrial_genetic_code)
+  5. The Invertebrate Mitochondrial Code (invertebrate_mitochondrial_genetic_code)
+  6. The Ciliate, Dasycladacean and Hexamita Nuclear Code (ciliate_nuclear_genetic_code)
+  9. The Echinoderm and Flatworm Mitochondrial Code (echinoderm_mitochondrial_genetic_code)
+ 10. The Euplotid Nuclear Code (euplotid_nuclear_genetic_code)
+ 11. The Bacterial, Archaeal and Plant Plastid Code (bacterial_plastid_genetic_code)
+ 12. The Alternative Yeast Nuclear Code (alternative_yeast_nuclear_genetic_code)
+ 13. The Ascidian Mitochondrial Code (ascidian_mitochondrial_genetic_code)
+ 14. The Alternative Flatworm Mitochondrial Code (alternative_flatworm_mitochondrial_genetic_code)
+ 15. Blepharisma Macronuclear Code (blepharisma_macronuclear_genetic_code)
+ 16. Chlorophycean Mitochondrial Code (chlorophycean_mitochondrial_genetic_code)
+ 21. Trematode Mitochondrial Code (trematode_mitochondrial_genetic_code)
+ 22. Scenedesmus obliquus Mitochondrial Code (scenedesmus_obliquus_mitochondrial_genetic_code)
+ 23. Thraustochytrium Mitochondrial Code (thraustochytrium_mitochondrial_genetic_code)
+ 24. Pterobranchia Mitochondrial Code (pterobrachia_mitochondrial_genetic_code)
+ 25. Candidate Division SR1 and Gracilibacteria Code (candidate_division_sr1_genetic_code)</code></pre><p>We show the vertebrate mitochondrial code:</p><pre><code class="language-julia hljs">GeneticCode(BioSequences.ncbi_trans_table[2])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GeneticCode over alphabet {T,C,A,G} with tuple length 3
+ TTT: F   TCT: S   TAT: Y   TGT: C   
+ TTC: F   TCC: S   TAC: Y   TGC: C   
+ TTA: L   TCA: S   TAA: *   TGA: W   
+ TTG: L   TCG: S   TAG: *   TGG: W   
+ CTT: L   CCT: P   CAT: H   CGT: R   
+ CTC: L   CCC: P   CAC: H   CGC: R   
+ CTA: L   CCA: P   CAA: Q   CGA: R   
+ CTG: L   CCG: P   CAG: Q   CGG: R   
+ ATT: I   ACT: T   AAT: N   AGT: S   
+ ATC: I   ACC: T   AAC: N   AGC: S   
+ ATA: M   ACA: T   AAA: K   AGA: *   
+ ATG: M   ACG: T   AAG: K   AGG: *   
+ GTT: V   GCT: A   GAT: D   GGT: G   
+ GTC: V   GCC: A   GAC: D   GGC: G   
+ GTA: V   GCA: A   GAA: E   GGA: G   
+ GTG: V   GCG: A   GAG: E   GGG: G   
+</code></pre><p>A genetic codes works like an associated array, so it is possible to access the mapping directly:</p><pre><code class="language-julia hljs">println(sgc[dna&quot;AAA&quot;])
+println(sgc[dna&quot;ATG&quot;]) # start codon
+println(sgc[dna&quot;GCG&quot;])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">K
+M
+A</code></pre><p>Index-based access is also possible. However, this is dependent of the underlying order of the tuples (codons) and labels (amino acids) - so be aware.</p><pre><code class="language-julia hljs">println(sgc[1]) # TTT
+println(sgc[64]) # GGG</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">F
+G</code></pre><p><code>BioCodes</code> provides also inverse mappings for genetic code tables. <a href="#BioCodes.inverse-Tuple{GeneticCode}"><code>BioCodes.inverse</code></a> creates a dictionary which maps  an amino acid (or label in general) to a set of associated codons (or tuples in general). This might be useful if a frequent lookup for the mapping is required. As an example a translation is created for the vertebrate mitochondrial code (index 2) which has four stop codons.</p><pre><code class="language-julia hljs">gc = GeneticCode(ncbi_trans_table[2])
+a2c = inverse(gc)
+
+println(a2c[AA_V])
+println(a2c[AA_Term]) # 4 stop codons</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Set(BioSequences.LongSequence{BioSequences.DNAAlphabet{4}}[GTT, GTA, GTG, GTC])
+Set(BioSequences.LongSequence{BioSequences.DNAAlphabet{4}}[TAG, AGA, TAA, AGG])</code></pre><h3 id="Artificial-genetic-code-tables"><a class="docs-heading-anchor" href="#Artificial-genetic-code-tables">Artificial genetic code tables</a><a id="Artificial-genetic-code-tables-1"></a><a class="docs-heading-anchor-permalink" href="#Artificial-genetic-code-tables" title="Permalink"></a></h3><p>The standard genetic code as discussed in the previous section is a special case of general genetic codes. The alphabet and tuple length and even the mapping can be changed.</p><p>We start with a code that only uses Adenin and Thymine as the alphabet and that has a tuple length of 2:</p><pre><code class="language-julia hljs">gc = GeneticCode(2, [DNA_A, DNA_T])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GeneticCode over alphabet {A,T} with tuple length 2
+ AA: *   AT: *   
+ TA: *   TT: *   
+</code></pre><p>Next we show how this empty code can be modified. We assign new amino acids:</p><pre><code class="language-julia hljs">gc[dna&quot;AA&quot;] = AA_F
+gc[dna&quot;TT&quot;] = AA_L
+gc</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GeneticCode over alphabet {A,T} with tuple length 2
+ AA: F   AT: *   
+ TA: *   TT: L   
+</code></pre><h1 id="API"><a class="docs-heading-anchor" href="#API">API</a><a id="API-1"></a><a class="docs-heading-anchor-permalink" href="#API" title="Permalink"></a></h1><article><details class="docstring" open="true"><summary id="Base.Matrix-Tuple{GeneticCode}"><a class="docstring-binding" href="#Base.Matrix-Tuple{GeneticCode}"><code>Base.Matrix</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">Matrix(gc::GeneticCode; order) -&gt; Matrix
+</code></pre><p>Converts a genetic code into a matrix where the cells are of type <a href="#BioCodes.GeneticCodeCell"><code>GeneticCodeCell</code></a>.</p><p>This is intended for printing purposes. Only tuple lengths 2 and 3 are supported yet.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L162-L168">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.GeneticCode"><a class="docstring-binding" href="#BioCodes.GeneticCode"><code>BioCodes.GeneticCode</code></a> — <span class="docstring-category">Type</span></summary><section><div><pre><code class="language-julia hljs">mutable struct GeneticCode{T, U&lt;:BioSymbols.NucleicAcid, V&lt;:BioSequences.NucleicAcidAlphabet}</code></pre><p>A mutable struct representing a genetic code as a mapping from tuples to labels.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L3-L7">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.GeneticCode-Tuple{BioSequences.GeneticCode}"><a class="docstring-binding" href="#BioCodes.GeneticCode-Tuple{BioSequences.GeneticCode}"><code>BioCodes.GeneticCode</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">GeneticCode(
+    code::BioSequences.GeneticCode
+) -&gt; GeneticCode{_A, BioSymbols.DNA} where _A
+</code></pre><p>Genetic code based on 64 codons according the the NCBI list.  See <code>BioSequences.ncbi_trans_table</code> for a list of all known genetic codes. The order of the bases is TCAG (or UCAG) (and not alphabetically).</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L51-L57">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.GeneticCode-Tuple{Int64, Vector, Vector}"><a class="docstring-binding" href="#BioCodes.GeneticCode-Tuple{Int64, Vector, Vector}"><code>BioCodes.GeneticCode</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">GeneticCode(
+    tuple_length::Int64,
+    alphabet::Vector,
+    label_order::Vector
+) -&gt; GeneticCode
+</code></pre><p>A genetic code that uses tuples of length <code>tuple_length</code> with  the alphabet <code>alphabet</code>. <code>label_order</code> represents the list of labels for each tuple.</p><p>The order of <code>label_order</code> must be identical to the order of the tuples in  <a href="#BioCodes.alltuples-Union{Tuple{T}, Tuple{Vector{T}, Int64}} where T&lt;:BioSymbols.BioSymbol"><code>alltuples</code></a><code>(alphabet, tuple_length)</code>.</p><pre><code class="language-julia hljs">gc = GeneticCode(2, [DNA_A, DNA_T], [AA_A, AA_L, AA_K, AA_P])</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L15-L27">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.GeneticCode-Tuple{Int64, Vector}"><a class="docstring-binding" href="#BioCodes.GeneticCode-Tuple{Int64, Vector}"><code>BioCodes.GeneticCode</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">GeneticCode(
+    tuple_length::Int64,
+    alphabet::Vector;
+    init
+) -&gt; GeneticCode{BioSymbols.AminoAcid}
+</code></pre><p>An empty genetic code filled with identical labels as specified  with the parameter <code>init</code> (default is Stop-Signal *).</p><pre><code class="language-julia hljs">gc1 = GeneticCode(2, [DNA_A, DNA_T]]) # only stop signal
+gc2 = GeneticCode(2, [DNA_A, DNA_T]]; init=AA_L) # only Leucine</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L34-L44">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.GeneticCodeCell"><a class="docstring-binding" href="#BioCodes.GeneticCodeCell"><code>BioCodes.GeneticCodeCell</code></a> — <span class="docstring-category">Type</span></summary><section><div><pre><code class="language-julia hljs">struct GeneticCodeCell</code></pre><p>A helper structure that stores a single mapping of a genetic code for printing. I.e. the assignment of a codon to an amino acid. The data types, however, are not restricted to biological entities.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L144-L150">source</a></section></details></article><article><details class="docstring" open="true"><summary id="Base.circshift-Tuple{T} where T&lt;:BioSequences.BioSequence"><a class="docstring-binding" href="#Base.circshift-Tuple{T} where T&lt;:BioSequences.BioSequence"><code>Base.circshift</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">circshift(seq::BioSequences.BioSequence; k) -&gt; Any
+</code></pre><p>Shift the elements in a sequence for one position to the left (AUGC -&gt; UGCA).</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/Tuples.jl#L53-L57">source</a></section></details></article><article><details class="docstring" open="true"><summary id="Base.length-Tuple{GeneticCode}"><a class="docstring-binding" href="#Base.length-Tuple{GeneticCode}"><code>Base.length</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">length(gc::GeneticCode) -&gt; Int64
+</code></pre><p>The number of tuples in the code.</p><pre><code class="language-julia hljs">using BioCodes
+length(StandardGeneticCode())
+# output
+64</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L90-L101">source</a></section></details></article><article><details class="docstring" open="true"><summary id="Base.split-Tuple{T} where T&lt;:BioSequences.BioSequence"><a class="docstring-binding" href="#Base.split-Tuple{T} where T&lt;:BioSequences.BioSequence"><code>Base.split</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">split(seq::BioSequences.BioSequence; l) -&gt; Vector
+</code></pre><p>Create tuples of length <code>l</code> by splitting a sequence <code>seq</code>. <code>seq</code> must implement the <code>collect</code> method.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/Tuples.jl#L37-L42">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.StandardGeneticCode-Tuple{}"><a class="docstring-binding" href="#BioCodes.StandardGeneticCode-Tuple{}"><code>BioCodes.StandardGeneticCode</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">StandardGeneticCode(
+
+) -&gt; GeneticCode{_A, BioSymbols.DNA} where _A
+</code></pre><p>The Standard Genetic Code. See <a href="#BioCodes.GeneticCode"><code>GeneticCode</code></a> for details.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L75-L79">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.alltuples-Union{Tuple{T}, Tuple{Vector{T}, Int64}} where T&lt;:BioSymbols.BioSymbol"><a class="docstring-binding" href="#BioCodes.alltuples-Union{Tuple{T}, Tuple{Vector{T}, Int64}} where T&lt;:BioSymbols.BioSymbol"><code>BioCodes.alltuples</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">alltuples(
+    alphabet::Array{T&lt;:BioSymbols.BioSymbol, 1},
+    l::Int64
+) -&gt; Vector
+</code></pre><p>Create all possible tuples of length <code>l</code> from the given <code>alphabet</code>. The tuples are returned as a vector of <code>LongDNA</code> or <code>LongRNA</code> sequences, depending on the type of the alphabet (<code>DNA</code> or <code>RNA</code>).</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/Tuples.jl#L8-L14">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.inverse-Tuple{GeneticCode}"><a class="docstring-binding" href="#BioCodes.inverse-Tuple{GeneticCode}"><code>BioCodes.inverse</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">inverse(
+    gc::GeneticCode
+) -&gt; Dict{_A, Set{_A1}} where {_A, _A1}
+</code></pre><p>Dictionary which maps a label to a set of corresponding tuples for a given genetic code <code>gc</code>. </p><p><strong>Examples</strong></p><p>The Vertebrate Mitochondrial Code (index 2) is used. This code has four stop codons.</p><pre><code class="language-julia hljs">using BioCodes, BioSequences
+gc = GeneticCode(ncbi_trans_table[2])
+a2c = inverse(gc)
+sort([a2c[AA_Term]...]) # Stop signal (set is sorted)
+# output
+4-element Vector{LongSequence{DNAAlphabet{4}}}:
+ AGA
+ AGG
+ TAA
+ TAG</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L227-L248">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.tuple_length-Tuple{GeneticCode}"><a class="docstring-binding" href="#BioCodes.tuple_length-Tuple{GeneticCode}"><code>BioCodes.tuple_length</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">tuple_length(gc::GeneticCode) -&gt; Any
+</code></pre><p>The length of the tuples in the code.</p><pre><code class="language-julia hljs">using BioCodes
+tuple_length(StandardGeneticCode()) # i.e. codons
+# output
+3</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L104-L115">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioSymbols.alphabet-Tuple{GeneticCode}"><a class="docstring-binding" href="#BioSymbols.alphabet-Tuple{GeneticCode}"><code>BioSymbols.alphabet</code></a> — <span class="docstring-category">Method</span></summary><section><div><pre><code class="language-julia hljs">alphabet(
+    gc::GeneticCode
+) -&gt; Vector{U} where U&lt;:BioSymbols.NucleicAcid
+</code></pre><p>The alphabet used in the code.</p><pre><code class="language-julia hljs">using BioCodes, BioSymbols
+alphabet(StandardGeneticCode())
+# output
+4-element Vector{DNA}:
+ DNA_T
+ DNA_C
+ DNA_A
+ DNA_G</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/GeneticCodes.jl#L119-L134">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.dinucs"><a class="docstring-binding" href="#BioCodes.dinucs"><code>BioCodes.dinucs</code></a> — <span class="docstring-category">Constant</span></summary><section><div><p>All 16 di-nucleotides for DNA</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/Tuples.jl#L28">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.codons"><a class="docstring-binding" href="#BioCodes.codons"><code>BioCodes.codons</code></a> — <span class="docstring-category">Constant</span></summary><section><div><p>All 64 codons for DNA</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/Tuples.jl#L30">source</a></section></details></article><article><details class="docstring" open="true"><summary id="BioCodes.tetranucs"><a class="docstring-binding" href="#BioCodes.tetranucs"><code>BioCodes.tetranucs</code></a> — <span class="docstring-category">Constant</span></summary><section><div><p>All 256 tetra-nucleotides for DNA</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/cammbio/BioCodes.jl/blob/d21ad31dac740b2c403e0eab07cfa102a71c3ea9/src/Tuples.jl#L32">source</a></section></details></article></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Friday 10 April 2026 08:21">Friday 10 April 2026</span>. Using Julia version 1.12.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
