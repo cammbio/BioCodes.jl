@@ -79,23 +79,23 @@ seq = rna"CAGCUUGAG"
 join(circshift.(split(seq, l=3)))
 ```
 
-## Complementary and reversed sequences
+### Complementary and reversed sequences
 
-Complement tuples can be generated with `BioSequences.complement` which is applied element-wise to a sequence of codons:
+Complemented tuples can be generated with `BioSequences.complement` which is applied element-wise to a sequence of codons:
 
 ```@example rt
 seq = rna"CAGCUUGAG"
 complement.(split(seq, l=3))
 ```
 
-Reverse tuples are also available via `BioSequences.reverse`:
+Reversed tuples are also available via `BioSequences.reverse`:
 
 ```@example rt
 seq = rna"CAGCUUGAG"
 reverse.(split(seq, l=3))
 ```
 
-If applied together we get complementary reverse codons:
+If applied together, we get complementary reversed codons:
 
 ```@example rt
 seq = rna"CAGCUUGAG"
@@ -185,4 +185,13 @@ gc
 ```@autodocs
 Modules = [BioCodes]
 Order   = [:type, :function]
+```
+```@docs
+BioCodes.dinucs
+```
+```@docs
+BioCodes.codons
+```
+```@docs
+BioCodes.tetranucs
 ```

@@ -25,8 +25,11 @@ end
 
 alltuples(alphabet::NTuple{N,T}, l::Int) where {N, T<:BioSymbol} = alltuples([alphabet...], l)
 
+"All 16 di-nucleotides for DNA"
 const dinucs = alltuples(stripped_alphabet(DNA), 2)
+"All 64 codons for DNA"
 const codons = alltuples(stripped_alphabet(DNA), 3)
+"All 256 tetra-nucleotides for DNA"
 const tetranucs = alltuples(stripped_alphabet(DNA), 4)
 
 import Base.split
