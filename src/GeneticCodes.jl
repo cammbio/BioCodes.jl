@@ -38,8 +38,8 @@ An empty genetic code filled with identical labels as specified
 with the parameter `init` (default is Stop-Signal *).
 
 ```julia
-gc1 = GeneticCode(2, [DNA_A, DNA_T]]) # only stop signal
-gc2 = GeneticCode(2, [DNA_A, DNA_T]]; init=AA_L) # only Leucine
+gc1 = GeneticCode(2, [DNA_A, DNA_T]) # only stop signal
+gc2 = GeneticCode(2, [DNA_A, DNA_T]; init=AA_L) # only Leucine
 ```
 """
 function GeneticCode(tuple_length::Int, alphabet::Vector; init=AA_Term)
@@ -172,6 +172,9 @@ function Base.Matrix(gc::GeneticCode; order::Union{Vector{Int},Nothing}=nothing)
         throw("Unsupported tuple length: $l")
     end
 
+    # The type of the tuples (RNA or DNA sequence):
+    T = typeof(names(gc.label_order)[1][1])
+
     n = length(gc) # number of tuples
     N = length(alphabet(gc))
     order = isnothing(order) ? (1:N) : order
@@ -184,12 +187,12 @@ function Base.Matrix(gc::GeneticCode; order::Union{Vector{Int},Nothing}=nothing)
         if l == 2
             i1 = ((i - 1) % N) + 1
             i2 = j
-            return LongDNA{4}([Σ[i1], Σ[i2]])
+            return T([Σ[i1], Σ[i2]])
         elseif l == 3
             i1 = (i - 1) ÷ N + 1
             i2 = j
             i3 = ((i - 1) % N) + 1
-            return LongDNA{4}([Σ[i1], Σ[i2], Σ[i3]])
+            return T([Σ[i1], Σ[i2], Σ[i3]])
         end
     end
 

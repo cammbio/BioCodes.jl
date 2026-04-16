@@ -37,6 +37,24 @@ end
         @test gc[dna"TT"] == AA_Term
     end
 
+    @testset "Empty 2x2 code RNA" begin
+        gc = GeneticCode(2, [RNA_A, RNA_U])
+        @test gc.label_order[rna"AU"] == AA_Term
+        @test length(gc.label_order) == 4
+        @test length(gc) == 4
+
+        @test gc[rna"AA"] == AA_Term
+        @test gc[rna"AU"] == AA_Term
+        @test gc[rna"UA"] == AA_Term
+        @test gc[rna"UU"] == AA_Term
+
+        gc[rna"AU"] = AA_K
+        @test gc[rna"AA"] == AA_Term
+        @test gc[rna"AU"] == AA_K
+        @test gc[rna"UA"] == AA_Term
+        @test gc[rna"UU"] == AA_Term
+    end
+
     @testset "SCG" begin
         gc = StandardGeneticCode()
         @test length(gc) == 64
