@@ -1,6 +1,6 @@
 name = "BioCodes"
 uuid = "5da0a781-4ec8-4633-a007-8ceb506d1ca1"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Markus Gumbel <m.gumbel@hs-mannheim.de>"]
 
 [deps]

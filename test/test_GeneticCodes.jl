@@ -19,11 +19,24 @@ end
 end
 
 @testset "GeneticCode" begin
+
+    @testset "Empty alphabet" begin
+        @test_throws "Alphabet must not be empty." GeneticCode(2, [])
+    end
+
+    @testset "Length 1" begin
+        gc = GeneticCode(1, [DNA_A])
+        @test_throws "Base.Matrix: Unsupported tuple length: 1" Base.Matrix(gc)
+        @test_throws "Base.Matrix: Unsupported tuple length: 1" display(gc)
+    end
+
     @testset "Empty 2x2 code" begin
         gc = GeneticCode(2, [DNA_A, DNA_T])
         @test gc.label_order[dna"AT"] == AA_Term
         @test length(gc.label_order) == 4
         @test length(gc) == 4
+        @test tuple_length(gc) == 2
+        @test alltuples(gc) == [dna"AA", dna"TA", dna"AT", dna"TT"]
 
         @test gc[dna"AA"] == AA_Term
         @test gc[dna"AT"] == AA_Term
@@ -42,6 +55,8 @@ end
         @test gc.label_order[rna"AU"] == AA_Term
         @test length(gc.label_order) == 4
         @test length(gc) == 4
+        @test tuple_length(gc) == 2
+        @test alltuples(gc) == [rna"AA", rna"UA", rna"AU", rna"UU"]
 
         @test gc[rna"AA"] == AA_Term
         @test gc[rna"AU"] == AA_Term

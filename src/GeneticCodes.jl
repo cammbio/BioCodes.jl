@@ -9,7 +9,7 @@ mutable struct GeneticCode{T,U<:BioSequences.NucleicAcid,V<:NucleicAcidAlphabet}
     "The order of the letter of the alphabet."
     alphabet_order::Vector{U}
     "A vector of labels, representing e.g. the assignment of amino acids to all possible codons."
-    label_order::NamedArray{T, 1, Vector{T}, Tuple{NamedArrays.OrderedDict{LongSequence{V}, Int64}}}
+    label_order::NamedArray{T,1,Vector{T},Tuple{NamedArrays.OrderedDict{LongSequence{V},Int64}}}
 end
 
 """
@@ -26,6 +26,9 @@ gc = GeneticCode(2, [DNA_A, DNA_T], [AA_A, AA_L, AA_K, AA_P])
 ```
 """
 function GeneticCode(tuple_length::Int, alphabet::Vector, label_order::Vector)
+    if length(alphabet) < 1
+        throw("Alphabet must not be empty.")
+    end
     tuples_list = alltuples(alphabet, tuple_length)
     GeneticCode(alphabet, NamedArray(label_order, (tuples_list,), ("aminoacid",)))
 end
@@ -55,8 +58,9 @@ Genetic code based on 64 codons according the the NCBI list.
 See `BioSequences.ncbi_trans_table` for a list of all known genetic codes.
 The order of the bases is TCAG (or UCAG) (and not alphabetically).
 """
-function GeneticCode(code::BioSequences.GeneticCode)
-    ucag = [DNA_T, DNA_C, DNA_A, DNA_G]
+function GeneticCode(code::BioSequences.GeneticCode;
+    alphabet::Union{Type{DNAAlphabet},Type{RNAAlphabet}}=DNAAlphabet)
+    ucag::Vector{<:NucleicAcid} = alphabet == DNAAlphabet ? [DNA_T, DNA_C, DNA_A, DNA_G] : [RNA_U, RNA_C, RNA_A, RNA_G]
     GeneticCode(
         3,
         ucag, # [stripped_alphabet(DNA)...],
@@ -77,7 +81,8 @@ end
 
 The Standard Genetic Code. See [`GeneticCode`](@ref) for details.
 """
-StandardGeneticCode() = GeneticCode(BioSequences.ncbi_trans_table[1])
+StandardGeneticCode(; alphabet::Union{Type{DNAAlphabet},Type{RNAAlphabet}}=DNAAlphabet) =
+    GeneticCode(BioSequences.ncbi_trans_table[1]; alphabet)
 
 Base.:(==)(gc1::GeneticCode, gc2::GeneticCode) = gc1.label_order == gc2.label_order
 
@@ -104,6 +109,26 @@ Base.length(gc::GeneticCode) = length(gc.label_order)
 """
     $(TYPEDSIGNATURES)
 
+All tuples of the code. The order is specified by []`alphabet`]@ref.
+
+```jldoctest
+using BioCodes, BioSequences
+gc = GeneticCode(2, [DNA_A, DNA_T])
+alltuples(gc)
+# output
+4-element Vector{LongSequence{DNAAlphabet{4}}}:
+ AA
+ TA
+ AT
+ TT
+```
+"""
+alltuples(gc::GeneticCode) = names(gc.label_order)[1]
+
+
+"""
+    $(TYPEDSIGNATURES)
+
 The length of the tuples in the code.
 
 ```jldoctest
@@ -113,7 +138,7 @@ tuple_length(StandardGeneticCode()) # i.e. codons
 3
 ```
 """
-tuple_length(gc::GeneticCode) = length(names(gc.label_order)[1][1])
+tuple_length(gc::GeneticCode) = length(alltuples(gc)[1])
 
 import BioSymbols.alphabet
 """
@@ -169,7 +194,7 @@ This is intended for printing purposes. Only tuple lengths 2 and 3 are supported
 function Base.Matrix(gc::GeneticCode; order::Union{Vector{Int},Nothing}=nothing)
     l = tuple_length(gc) # tuple length
     if (l < 2 || l > 3)
-        throw("Unsupported tuple length: $l")
+        throw("Base.Matrix: Unsupported tuple length: $l")
     end
 
     # The type of the tuples (RNA or DNA sequence):
