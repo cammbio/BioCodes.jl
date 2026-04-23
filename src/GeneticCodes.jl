@@ -1,3 +1,5 @@
+using Crayons
+
 export GeneticCode, StandardGeneticCode, tuple_length, alphabet, inverse
 
 """
@@ -182,6 +184,33 @@ function Base.:(==)(gcc1::GeneticCodeCell, gcc2::GeneticCodeCell)
     gcc1.tuple == gcc2.tuple && gcc1.label == gcc2.label
 end
 
+const amino_acid_colors = Dict(
+    AA_F => (190, 180, 70),
+    AA_L => (120, 80, 20),
+    AA_I => (130, 120, 30),
+    AA_M => (10, 220, 10),
+    AA_V => (50, 240, 200),
+    AA_S => (40, 40, 220),
+    AA_P => (240, 130, 90),
+    AA_T => (100, 200, 100),
+    AA_A => (220, 220, 60),
+    AA_Y => (100, 0, 200),
+    AA_Term => (50, 50, 50),
+    AA_H => (40, 60, 100),
+    AA_Q => (220, 0, 160),
+    AA_N => (200, 100, 100),
+    AA_K => (80, 250, 160),
+    AA_D => (100, 200, 100),
+    AA_E => (50, 160, 160),
+    AA_C => (220, 180, 120),
+    AA_W => (180, 220, 220),
+    AA_R => (170, 190, 130),
+    AA_G => (200, 0, 20),
+)
+
+color(::Any) = (100, 100, 100)
+color(e::AminoAcid) = haskey(amino_acid_colors, e) ? amino_acid_colors[e] : (100, 100, 100)
+
 Base.show(io::IO, gcc::GeneticCodeCell) = print(io, "$(gcc.tuple): $(gcc.label) ")
 
 """
@@ -234,13 +263,21 @@ function Base.show(io::IO, gc::GeneticCode)
     n, m = size(M)
     a = join(alphabet(gc), ",")
     t = tuple_length(gc)
+    l = length(alphabet(gc))
+    b = n ÷ l
+    p = repeat([repeat([true], b)..., repeat([false], b)...], 2b)
     if n < 70 && m < 10
         a = join(gc.alphabet_order, ",")
         println(io, "GeneticCode over alphabet {$a} with tuple length $t")
-        for r in eachrow(M)
+        for (i, r) in enumerate(eachrow(M))
             print(io, " ")
             for o in r
-                print(io, "$o  ")
+                tuple_color = p[i] ? (200, 200, 200) : (125, 125, 125)
+                print(io,
+                    Crayon(foreground=tuple_color), o.tuple, ":",
+                    Crayon(reset=true),
+                    Crayon(background=color(o.label)), " $(o.label) ",
+                    Crayon(reset=true), "  ")
             end
             println(io)
         end
