@@ -1,11 +1,12 @@
 name = "BioCodes"
 uuid = "5da0a781-4ec8-4633-a007-8ceb506d1ca1"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Markus Gumbel <m.gumbel@hs-mannheim.de>"]
 
 [deps]
 BioSequences = "7e6ae17a-c86d-528c-b3b9-7f778a29fe59"
 BioSymbols = "3c28c6f8-a34d-59c4-9654-267d177fcfa9"
+Crayons = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
 Pipe = "b98c9c47-44ae-5843-9183-064241ee97a0"
@@ -13,6 +14,7 @@ Pipe = "b98c9c47-44ae-5843-9183-064241ee97a0"
 [compat]
 BioSequences = "3.5.0"
 BioSymbols = "5.2.0"
+Crayons = "4.1.1"
 DocStringExtensions = "0.9.5"
 NamedArrays = "0.10.5"
 Pipe = "1.3.0"
