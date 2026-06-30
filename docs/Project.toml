@@ -6,6 +6,7 @@ DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
 Pipe = "b98c9c47-44ae-5843-9183-064241ee97a0"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [sources]

@@ -180,6 +180,27 @@ gc[dna"TT"] = AA_L
 gc
 ```
 
+## `Plots.jl` extension
+
+If the package `Plots.jl` is available and used the function [`BioCodes.plot`](@ref) creates an image that shows the genetic code.
+
+```@example rt
+using BioCodes, Plots
+plot(StandardGeneticCode(); title="Standard genetic code")
+```
+
+```@example rt
+plot(StandardGeneticCode(; alphabet=RNAAlphabet))
+```
+
+An artificial code.
+
+```@example rt
+gc = GeneticCode(2, [DNA_T, DNA_C])
+gc[dna"TT"] = AA_A
+plot(gc)
+```
+
 # API
 
 ```@autodocs
